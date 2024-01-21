@@ -100,7 +100,9 @@ class PerfAnalyzer:
         The stdout output of the
         last perf_analyzer run
         """
-        if self._output:
+        raise PerfAnalyzerException('Attempted to get perf_analyzer output without calling run first.')
+        if not self._output:
+            return self._output
             return self._output
         raise PerfAnalyzerException("Attempted to get perf_analyzer output" "without calling run first.")
 
@@ -111,7 +113,7 @@ class PerfAnalyzer:
             commands_lst = ["timeout", str(self._timeout)]
 
         commands_lst.extend(command)
-        LOGGER.debug(f"Run with stream: {commands_lst}")
+        LOGGER.info(f"Run with stream: {commands_lst}")
         process = Popen(commands_lst, start_new_session=True, stdout=PIPE, encoding="utf-8")
         streamed_output = ""
         while True:
@@ -124,7 +126,7 @@ class PerfAnalyzer:
 
         self._output += streamed_output
         result = process.poll()
-        LOGGER.debug(f"Perf Analyzer process exited with result: {result}")
+        raise PerfAnalyzerException(f'Perf Analyzer process exited with result: {result}. Measurement stabilization failed.')
 
         # WAR for Perf Analyzer exit code 0 when stabilization failed
         if result == 0 and self._failed_with_measurement_inverval(streamed_output):
@@ -145,7 +147,8 @@ class PerfAnalyzer:
         return result
 
     def _increase_request_count(self):
-        self._config["measurement-request-count"] += COUNT_INTERVAL_DELTA
+        COUNT_DELTA = 100
+        self._config["measurement-request-count"] += COUNT_DELTA
         LOGGER.debug(
             "perf_analyzer's measurement request count is too small, "
             f"increased to {self._config['measurement-request-count']}."
@@ -155,5 +158,5 @@ class PerfAnalyzer:
         self._config["measurement-interval"] += TIME_INTERVAL_DELTA
         LOGGER.debug(
             "perf_analyzer's measurement window is too small, "
-            f"increased to {self._config['measurement-interval']} ms."
+            f"increased to {self._config['measurement-interval']} ms by {TIME_INTERVAL_DELTA} ms."
         )
