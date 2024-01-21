@@ -24,7 +24,7 @@ if __package__ is None:
 from .exceptions import PerfAnalyzerException
 
 MAX_INTERVAL_CHANGES = 10
-COUNT_INTERVAL_DELTA = 50
+COUNT_INTERVAL_DELTA = 100
 TIME_INTERVAL_DELTA = 2000
 
 LOGGER = logging.getLogger(__name__)
