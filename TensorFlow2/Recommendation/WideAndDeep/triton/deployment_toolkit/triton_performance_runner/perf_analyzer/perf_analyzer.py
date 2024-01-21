@@ -47,28 +47,40 @@ class PerfAnalyzer:
         self.bin_path = "perf_analyzer"
         self._config = config
         self._output = ""
-        self._timeout = timeout
+new line(s) to replace
 
-    def run(self):
+    def output(self):
         """
-        Runs the perf analyzer with the
-        initialized configuration
-
         Returns
         -------
-        List of Records
-            List of the metrics obtained from this
-            run of perf_analyzer
-
-        Raises
-        ------
-        PerfAnalyzerException
-            If subprocess throws CalledProcessError
+        The stdout output of the
+        last perf_analyzer run
         """
-        self._output = ""
+        if self._output:
+            return self._output
+        raise PerfAnalyzerException("Attempted to get perf_analyzer output" "without calling run first.")
 
-        for _ in range(MAX_INTERVAL_CHANGES):
-            command = [self.bin_path]
+    def _run_with_stream(self, command: List[str]):
+        commands_lst = []
+
+        if self._timeout:
+            commands_lst = ["timeout", str(self._timeout)]
+
+        commands_lst.extend(command)
+        LOGGER.debug(f"Run with stream: {commands_lst}")
+        process = Popen(commands_lst, start_new_session=True, stdout=PIPE, encoding="utf-8")
+        streamed_output = ""
+        while True:
+            output = process.stdout.readline()
+            if output == "" and process.poll() is not None:
+                break
+            if output:
+                streamed_output += output
+                print(output.rstrip())
+
+        self._output += streamed_output
+        result = process.poll()
+        LOGGER.debug(f"Perf Analyzer process exited with result: {result}")
             command += self._config.to_cli_string().replace("=", " ").split()
 
             LOGGER.debug(f"Perf Analyze command: {command}")
@@ -102,7 +114,7 @@ class PerfAnalyzer:
         """
         if self._output:
             return self._output
-        raise PerfAnalyzerException("Attempted to get perf_analyzer output" "without calling run first.")
+        raise PerfAnalyzerException("Attempted to get perf_analyzer output without calling run first.")
 
     def _run_with_stream(self, command: List[str]):
         commands_lst = []

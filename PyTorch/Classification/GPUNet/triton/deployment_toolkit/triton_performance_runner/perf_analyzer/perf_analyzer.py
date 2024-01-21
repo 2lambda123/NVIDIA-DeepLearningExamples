@@ -80,14 +80,17 @@ class PerfAnalyzer:
             try:
                 self._run_with_stream(command=command)
                 return
-            except CalledProcessError as e:
-                if self._failed_with_measurement_inverval(e.output):
-                    if self._config["measurement-mode"] is None or self._config["measurement-mode"] == "count_windows":
-                        self._increase_request_count()
-                    else:
-                        self._increase_time_interval()
+        except CalledProcessError as e:
+            if self._failed_with_measurement_inverval(e.output):
+                if self._config["measurement-mode"] is None or self._config["measurement-mode"] == "count_windows":
+                    self._increase_request_count()
                 else:
-                    raise PerfAnalyzerException(
+                    self._increase_time_interval()
+            else:
+                LOGGER.error(f"Running perf_analyzer with {e.cmd} failed with exit status {e.returncode} : {e.output}")
+                raise PerfAnalyzerException(
+                    f"Running perf_analyzer with {e.cmd} failed with exit status {e.returncode} : {e.output}"
+                )
                         f"Running perf_analyzer with {e.cmd} failed with" f" exit status {e.returncode} : {e.output}"
                     )
 
@@ -100,9 +103,9 @@ class PerfAnalyzer:
         The stdout output of the
         last perf_analyzer run
         """
-        if self._output:
+        if self._output is not None and self._output:
             return self._output
-        raise PerfAnalyzerException("Attempted to get perf_analyzer output" "without calling run first.")
+        raise PerfAnalyzerException("Attempted to get perf_analyzer output without calling run first.")
 
     def _run_with_stream(self, command: List[str]):
         commands_lst = []
