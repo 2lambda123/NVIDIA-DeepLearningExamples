@@ -111,7 +111,7 @@ class PerfAnalyzer:
             commands_lst = ["timeout", str(self._timeout)]
 
         commands_lst.extend(command)
-        LOGGER.debug(f"Run with stream: {commands_lst}")
+        LOGGER.info(f"Run with stream: {commands_lst}")
         process = Popen(commands_lst, start_new_session=True, stdout=PIPE, encoding="utf-8")
         streamed_output = ""
         while True:
@@ -124,7 +124,7 @@ class PerfAnalyzer:
 
         self._output += streamed_output
         result = process.poll()
-        LOGGER.debug(f"Perf Analyzer process exited with result: {result}")
+        LOGGER.info(f"Perf Analyzer process exited with result: {result}")
 
         # WAR for Perf Analyzer exit code 0 when stabilization failed
         if result == 0 and self._failed_with_measurement_inverval(streamed_output):
