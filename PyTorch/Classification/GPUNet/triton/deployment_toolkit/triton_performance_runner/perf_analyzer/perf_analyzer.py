@@ -158,5 +158,5 @@ class PerfAnalyzer:
         self._config["measurement-interval"] += TIME_INTERVAL_DELTA
         LOGGER.debug(
             "perf_analyzer's measurement window is too small, "
-            f"increased to {self._config['measurement-interval']} ms."
+            f"increased to {self._config['measurement-interval']} ms by {TIME_INTERVAL_DELTA} ms."
         )
