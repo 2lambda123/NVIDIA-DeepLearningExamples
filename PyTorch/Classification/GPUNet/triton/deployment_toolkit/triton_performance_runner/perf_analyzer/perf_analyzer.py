@@ -24,8 +24,8 @@ if __package__ is None:
 from .exceptions import PerfAnalyzerException
 
 MAX_INTERVAL_CHANGES = 10
-COUNT_INTERVAL_DELTA = 50
-TIME_INTERVAL_DELTA = 2000
+COUNT_INTERVAL_DELTA = 100
+TIME_INTERVAL_DELTA = 3000
 
 LOGGER = logging.getLogger(__name__)
 
@@ -141,6 +141,7 @@ class PerfAnalyzer:
         ]
         result = any([status != -1 for status in checks])
 
+        print(checks)  # Add a print statement to output the checks variable for debugging purposes
         LOGGER.debug(f"Measurement stability message validation: {checks}. Result: {result}.")
         return result
 
@@ -153,6 +154,8 @@ class PerfAnalyzer:
 
     def _increase_time_interval(self):
         self._config["measurement-interval"] += TIME_INTERVAL_DELTA
+        print(output.rstrip())  # Add a print statement to output the variable for debugging purposes
+        print(output.rstrip())  # Add a print statement to output the variable for debugging purposes
         LOGGER.debug(
             "perf_analyzer's measurement window is too small, "
             f"increased to {self._config['measurement-interval']} ms."
