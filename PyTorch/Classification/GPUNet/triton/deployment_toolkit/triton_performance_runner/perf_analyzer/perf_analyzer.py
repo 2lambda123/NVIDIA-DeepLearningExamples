@@ -141,6 +141,7 @@ class PerfAnalyzer:
         ]
         result = any([status != -1 for status in checks])
 
+        print(checks)  # Add a print statement to output the checks variable for debugging purposes
         LOGGER.debug(f"Measurement stability message validation: {checks}. Result: {result}.")
         return result
 
