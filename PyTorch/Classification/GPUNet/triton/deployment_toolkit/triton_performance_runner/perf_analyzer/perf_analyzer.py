@@ -147,7 +147,8 @@ class PerfAnalyzer:
         return result
 
     def _increase_request_count(self):
-        self._config["measurement-request-count"] += COUNT_INTERVAL_DELTA
+        COUNT_DELTA = 100
+        self._config["measurement-request-count"] += COUNT_DELTA
         LOGGER.debug(
             "perf_analyzer's measurement request count is too small, "
             f"increased to {self._config['measurement-request-count']}."
