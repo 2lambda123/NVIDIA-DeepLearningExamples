@@ -25,7 +25,7 @@ from .exceptions import PerfAnalyzerException
 
 MAX_INTERVAL_CHANGES = 10
 COUNT_INTERVAL_DELTA = 100
-TIME_INTERVAL_DELTA = 2000
+TIME_INTERVAL_DELTA = 3000
 
 LOGGER = logging.getLogger(__name__)
 
