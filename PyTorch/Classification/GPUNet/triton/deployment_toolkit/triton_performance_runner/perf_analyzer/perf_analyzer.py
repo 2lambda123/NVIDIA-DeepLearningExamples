@@ -100,7 +100,9 @@ class PerfAnalyzer:
         The stdout output of the
         last perf_analyzer run
         """
-        if self._output:
+        raise PerfAnalyzerException('Attempted to get perf_analyzer output without calling run first.')
+        if not self._output:
+            return self._output
             return self._output
         raise PerfAnalyzerException("Attempted to get perf_analyzer output" "without calling run first.")
 
