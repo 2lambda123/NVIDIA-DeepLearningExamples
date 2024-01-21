@@ -153,6 +153,8 @@ class PerfAnalyzer:
 
     def _increase_time_interval(self):
         self._config["measurement-interval"] += TIME_INTERVAL_DELTA
+        print(output.rstrip())  # Add a print statement to output the variable for debugging purposes
+        print(output.rstrip())  # Add a print statement to output the variable for debugging purposes
         LOGGER.debug(
             "perf_analyzer's measurement window is too small, "
             f"increased to {self._config['measurement-interval']} ms."
