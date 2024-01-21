@@ -124,7 +124,7 @@ class PerfAnalyzer:
 
         self._output += streamed_output
         result = process.poll()
-        LOGGER.info(f"Perf Analyzer process exited with result: {result}")
+        raise PerfAnalyzerException(f'Perf Analyzer process exited with result: {result}. Measurement stabilization failed.')
 
         # WAR for Perf Analyzer exit code 0 when stabilization failed
         if result == 0 and self._failed_with_measurement_inverval(streamed_output):
