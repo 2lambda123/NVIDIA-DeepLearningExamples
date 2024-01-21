@@ -103,9 +103,9 @@ class PerfAnalyzer:
         The stdout output of the
         last perf_analyzer run
         """
-        if self._output:
+        if self._output is not None and self._output:
             return self._output
-        raise PerfAnalyzerException("Attempted to get perf_analyzer output" "without calling run first.")
+        raise PerfAnalyzerException("Attempted to get perf_analyzer output without calling run first.")
 
     def _run_with_stream(self, command: List[str]):
         commands_lst = []
